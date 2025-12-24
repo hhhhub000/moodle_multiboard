@@ -1,0 +1,104 @@
+    <div class="multiboard-columns">
+        {{#columns}}
+        <div class="multiboard-column" data-column-id="{{id}}">
+            <h3 class="column-header">{{name}}</h3>
+            <div class="column-content">
+                {{#notes}}
+                <div class="multiboard-note color-{{color}}" data-note-id="{{id}}">
+                    <div class="note-header">
+                        <div class="user-info">
+                            {{{userpicture}}}
+                            <span class="user-name">{{userfullname}}</span>
+                        </div>
+                        <div class="note-actions">
+                            {{#canmanage}}
+                            <button class="btn btn-sm btn-icon edit-note" title="{{#str}}edit, mod_multiboard{{/str}}">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon delete-note" title="{{#str}}delete, mod_multiboard{{/str}}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            {{/canmanage}}
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        {{{content}}}
+                    </div>
+                    <div class="note-footer">
+                        <span class="time">{{timecreatedstr}}</span>
+                        <button class="btn btn-sm btn-link reply-btn">{{#str}}addcomment, mod_multiboard{{/str}}</button>
+                    </div>
+                    <div class="note-comments">
+                        {{#comments}}
+                        <div class="comment">
+                            <div class="comment-header">
+                                {{{userpicture}}}
+                                <span class="user-name">{{userfullname}}</span>
+                                <span class="time">{{timecreatedstr}}</span>
+                            </div>
+                            <div class="comment-content">
+                                {{{content}}}
+                            </div>
+                        </div>
+                        {{/comments}}
+                    </div>
+                    <div class="comment-form hidden">
+                        <textarea class="form-control comment-input" rows="2"></textarea>
+                        <button class="btn btn-sm btn-primary submit-comment">{{#str}}addcomment, mod_multiboard{{/str}}</button>
+                    </div>
+                </div>
+                {{/notes}}
+                {{^notes}}
+                <div class="empty-placeholder">{{#str}}clicktoadd, mod_multiboard{{/str}}</div>
+                {{/notes}}
+            </div>
+        </div>
+        {{/columns}}
+    </div>
+</div>
+
+<!-- Add Note Modal -->
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNoteModalLabel">{{#str}}addnote, mod_multiboard{{/str}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="note-content" class="col-form-label">Content:</label>
+            <textarea class="form-control" id="note-content"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="note-color" class="col-form-label">{{#str}}color, mod_multiboard{{/str}}:</label>
+            <select class="form-control" id="note-color">
+                <option value="yellow">{{#str}}yellow, mod_multiboard{{/str}}</option>
+                <option value="blue">{{#str}}blue, mod_multiboard{{/str}}</option>
+                <option value="green">{{#str}}green, mod_multiboard{{/str}}</option>
+                <option value="red">{{#str}}red, mod_multiboard{{/str}}</option>
+                <option value="purple">{{#str}}purple, mod_multiboard{{/str}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="note-column" class="col-form-label">Column:</label>
+            <select class="form-control" id="note-column">
+                {{#columns}}
+                <option value="{{id}}">{{name}}</option>
+                {{/columns}}
+            </select>
+          </div>
+
+          <input type="hidden" id="note-id">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-note">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
