@@ -1,7 +1,14 @@
-    <div class="multiboard-columns">
+    <div class="multiboard-columns" data-canmanagecolumns="{{canmanagecolumns}}">
         {{#columns}}
         <div class="multiboard-column" data-column-id="{{id}}">
-            <h3 class="column-header">{{name}}</h3>
+            <div class="column-header-wrapper">
+                {{#canmanagecolumns}}
+                <button class="btn btn-sm btn-icon edit-column-btn" title="{{#str}}edit, mod_multiboard{{/str}}">
+                    <i class="fa fa-pencil"></i>
+                </button>
+                {{/canmanagecolumns}}
+                <h3 class="column-header">{{name}}</h3>
+            </div>
             <div class="column-content">
                 {{#notes}}
                 <div class="multiboard-note color-{{color}}" data-note-id="{{id}}">

@@ -62,11 +62,13 @@ $columns = $DB->get_records('multiboard_columns', array('multiboardid' => $multi
 $notes = $DB->get_records('multiboard_notes', array('multiboardid' => $multiboard->id), 'timecreated ASC');
 
 // Prepare data for template
+$canmanagecolumns = has_capability('mod/multiboard:manageentries', $context);
 $data = [
     'id' => $multiboard->id,
     'cmid' => $cm->id,
     'columns' => array_values($columns),
     'userid' => $USER->id,
+    'canmanagecolumns' => $canmanagecolumns,
 ];
 
 // Map notes to columns
@@ -115,6 +117,7 @@ foreach ($notes as $note) {
 // Add notes to columns in data
 foreach ($data['columns'] as &$column) {
     $column->notes = isset($notesbycolumn[$column->id]) ? $notesbycolumn[$column->id] : [];
+    $column->canmanagecolumns = $canmanagecolumns;
 }
 
 echo $OUTPUT->render_from_template('mod_multiboard/main', $data);
@@ -134,7 +137,8 @@ $PAGE->requires->js_call_amd('mod_multiboard/board', 'init', array(
             'addnote' => $addnote,
             'edit' => $edit
         ],
-        'now' => $now
+        'now' => $now,
+        'canmanagecolumns' => $canmanagecolumns
     )
 ));
 

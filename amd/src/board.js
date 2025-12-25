@@ -6,12 +6,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/modal_factory', 'core/
         lastUpdate: 0,
         timer: null,
         strings: {},
+        canManageColumns: false,
 
         init: function (params) {
             this.multiboardId = params.multiboardid;
             this.cmId = params.cmid;
             this.strings = params.strings || {};
             this.lastUpdate = params.now || Math.floor(Date.now() / 1000);
+            this.canManageColumns = params.canmanagecolumns || false;
 
             this.registerEvents();
             this.startPolling();
@@ -68,14 +70,19 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/modal_factory', 'core/
                 $('#addNoteModal').modal('show');
             });
 
-            // Column Name Editing
-            $(document).on('click', '.column-header', function () {
-                var $h3 = $(this);
+            // Column Name Editing - Edit button click (for teachers)
+            $(document).on('click', '.edit-column-btn', function (e) {
+                e.stopPropagation();
+                if (!that.canManageColumns) return;
+
+                var $wrapper = $(this).closest('.column-header-wrapper');
+                var $h3 = $wrapper.find('.column-header');
                 var currentName = $h3.text();
-                var columnId = $h3.closest('.multiboard-column').data('column-id');
+                var columnId = $(this).closest('.multiboard-column').data('column-id');
 
                 var $input = $('<input type="text" class="form-control column-name-input">').val(currentName);
                 $h3.replaceWith($input);
+                $(this).hide();
                 $input.focus();
 
                 $input.on('blur keypress', function (e) {
@@ -91,12 +98,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/modal_factory', 'core/
                             }
                         }])[0].done(function () {
                             $input.replaceWith('<h3 class="column-header">' + newName + '</h3>');
+                            $wrapper.find('.edit-column-btn').show();
                         }).fail(function (ex) {
                             Notification.exception(ex);
                             $input.replaceWith('<h3 class="column-header">' + currentName + '</h3>');
+                            $wrapper.find('.edit-column-btn').show();
                         });
                     } else {
                         $input.replaceWith('<h3 class="column-header">' + currentName + '</h3>');
+                        $wrapper.find('.edit-column-btn').show();
                     }
                 });
             });
