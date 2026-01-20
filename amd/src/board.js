@@ -54,7 +54,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/modal_factory', 'core/
             $(document).on('click', '.edit-note', function () {
                 var note = $(this).closest('.multiboard-note');
                 var noteId = note.data('note-id');
-                var content = note.find('.note-content').text();
+                var content = note.find('.note-content').html().trim().replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
 
                 // Get color class
                 var colorClass = note.attr('class').match(/color-(\w+)/);
@@ -326,7 +326,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/modal_factory', 'core/
                 </div>
             `;
 
-            column.find('.column-content').append(html);
+            // Insert before the add-card-btn guide, or append if guide doesn't exist
+            var addCardBtn = column.find('.column-content .add-card-btn');
+            if (addCardBtn.length > 0) {
+                addCardBtn.before(html);
+            } else {
+                column.find('.column-content').append(html);
+            }
         },
 
         renderComment: function (comment, noteId) {
